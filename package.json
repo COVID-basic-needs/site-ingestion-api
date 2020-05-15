@@ -1,0 +1,12 @@
+{
+  "name": "site-ingestion-api",
+  "version": "1.0.0",
+  "description": "Data ingestion API layer that handles the site data ingestion flow.",
+  "main": "index.js",
+  "repository": "https://github.com/COVID-basic-needs/site-ingestion-api",
+  "author": "Michael Man",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
