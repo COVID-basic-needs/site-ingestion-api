@@ -6,3 +6,4 @@ phases:
 artifacts:
   files:
     - '**/*'
+    - appspec.yaml
