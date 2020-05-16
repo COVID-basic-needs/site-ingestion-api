@@ -1,0 +1,3 @@
+/**
+ * Validates JSON input
+ */

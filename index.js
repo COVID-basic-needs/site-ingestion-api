@@ -1,41 +1,37 @@
 'use strict';
 console.log('Loading site ingestion API');
- 
-exports.handler = async (event) => {
-    let name = "you";
-    let city = 'World';
-    let time = 'day';
-    let day = '';
-    let responseCode = 200;
-    console.log("request: " + JSON.stringify(event));
-    
-    if (event.queryStringParameters && event.queryStringParameters.name) {
-        console.log("Received name: " + event.queryStringParameters.name);
-        name = event.queryStringParameters.name;
-    }
-    
-    if (event.queryStringParameters && event.queryStringParameters.city) {
-        console.log("Received city: " + event.queryStringParameters.city);
-        city = event.queryStringParameters.city;
-    }
-    
-    if (event.headers && event.headers['day']) {
-        console.log("Received day: " + event.headers.day);
-        day = event.headers.day;
-    }
-    
-    if (event.body) {
-        let body = JSON.parse(event.body)
-        if (body.time) 
-            time = body.time;
-    }
- 
-    let greeting = `Good ${time}, ${name} of ${city}.`;
-    if (day) greeting += ` Happy ${day}!`;
 
+import pushToAirtable from './src/pushToAirtable'; 
+
+exports.handler = async (event) => {
+    console.log("Request: " + JSON.stringify(event));
+    
+    if (Object.keys(event.body).length === 0) {
+        return {
+            statusCode: 400,
+            body: {
+                error: "Empty payload",
+            },
+        };
+    }
+
+    try {
+        let data = JSON.parse(event.body);
+    } catch(e) {
+        console.log("Bad input: " + event.body);
+
+        return {
+            statusCode: 415,
+            body: {
+                error: "Bad payload",
+            },
+        };
+    }
+
+    console.log("Body: " + data);
+    
     let responseBody = {
-        message: greeting,
-        input: event
+        message: "Hello World!",
     };
     
     // The output from a Lambda proxy integration must be 
@@ -45,10 +41,7 @@ exports.handler = async (event) => {
     // base64-encoded payload, you must also set the 'isBase64Encoded'
     // property to 'true'.
     let response = {
-        statusCode: responseCode,
-        headers: {
-            "x-custom-header" : "my custom header value"
-        },
+        statusCode: 200,
         body: JSON.stringify(responseBody)
     };
     console.log("response: " + JSON.stringify(response))
