@@ -6,7 +6,7 @@ console.log('Loading site ingestion API');
 exports.handler = async (event) => {
     console.log("Request: " + JSON.stringify(event));
     
-    if (event.body === undefined || Object.keys(event.body).length === 0) {
+    if (!event.body || Object.keys(event.body).length === 0) {
         return {
             statusCode: 400,
             body: {
