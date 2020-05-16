@@ -15,8 +15,9 @@ exports.handler = async (event) => {
         };
     }
 
+    let data;
     try {
-        let data = JSON.parse(event.body);
+        data = JSON.parse(event.body);
     } catch(e) {
         console.log("Bad input: " + event.body);
 
