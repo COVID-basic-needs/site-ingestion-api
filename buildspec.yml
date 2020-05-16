@@ -6,6 +6,3 @@ phases:
 artifacts:
   files:
     - '**/*'
-  base-directory: .
-  name: build-artifact-name
-  discard-paths: no
