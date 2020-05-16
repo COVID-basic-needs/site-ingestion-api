@@ -9,9 +9,9 @@ exports.handler = async (event) => {
     if (!event.body || Object.keys(event.body).length === 0) {
         return {
             statusCode: 400,
-            body: {
+            body: JSON.stringify({
                 error: "Empty payload",
-            },
+            }),
         };
     }
 
@@ -22,9 +22,9 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 415,
-            body: {
+            body: JSON.stringify({
                 error: "Bad payload",
-            },
+            }),
         };
     }
 
