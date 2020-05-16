@@ -2,10 +2,9 @@
  * Reads Airtable configs from environment vars and creates an Airtable connection
  */
 
-import dotenv from 'dotenv';
-import Airtable from 'airtable';
+require('dotenv').config()
+const Airtable = require('airtable');
 
-dotenv.config();
 const base = new Airtable({
     apiKey: process.env.AIRTABLE_API_KEY
 }).base(process.env.AIRTABLE_BASE_ID);
@@ -16,4 +15,4 @@ const detailsTable = base(process.env.NODE_ENV === 'test' ? 'TEST_SITE_DETAILS' 
 
 const fromEmail = process.env.FROM_EMAIL;
 
-export { sitesTable, detailsTable, fromEmail };
+module.exports = { sitesTable, detailsTable, fromEmail };

@@ -1,7 +1,7 @@
 'use strict';
-console.log('Loading site ingestion API');
+const pushToAirtable = require('./src/pushToAirtable'); 
 
-import pushToAirtable from './src/pushToAirtable'; 
+console.log('Loading site ingestion API');
 
 exports.handler = async (event) => {
     console.log("Request: " + JSON.stringify(event));

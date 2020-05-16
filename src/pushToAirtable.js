@@ -2,11 +2,11 @@
  * Pushes data to Airtable SITES table, then push associated details to SITE_DETAILS
  */
 
-import { detailsTable, fromEmail, sitesTable } from "./airtableConfig";
+let { detailsTable, fromEmail, sitesTable } = require("./airtableConfig");
 
 const updateMethod = "Upload V2: github.com/COVID-basic-needs/food-site-updates";
 
-export default async function(siteList){
+module.exports = async function(siteList){
     const total = siteList.length;
 
     const originalSites = await fetchSiteTable();
@@ -163,5 +163,3 @@ function populateDetailsFields(site, id, fromEmail, updateMethod) {
         }
     };
 }
-
-export { sitesTable, detailsTable, fromEmail };
