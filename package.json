@@ -6,6 +6,7 @@
   "repository": "https://github.com/COVID-basic-needs/site-ingestion-api",
   "author": "Michael Man",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1"
