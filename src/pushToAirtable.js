@@ -7,7 +7,8 @@ const { populateSiteFields, populateDetailsFields } = require("./schema");
 
 module.exports = async function(siteList){
     const total = siteList.length;
-
+    
+    console.log("Begin push");
     try {
         originalSites = await fetchSiteTable();
     } catch (err) {
@@ -87,7 +88,12 @@ module.exports = async function(siteList){
     }
 
     // wait on all promises to finish
-    await Promise.all(promises);
+    try {
+        await Promise.all(promises);
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
     console.log(`Pushed ${newSites.length} rows to Airtable ${sitesTable.name} table and ${dupedSiteDetails.length + newSites.length} rows to the ${detailsTable.name} table.`);
     return [newSites.length, dupedSiteDetails.length + newSites.length];
 };

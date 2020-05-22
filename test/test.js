@@ -87,5 +87,6 @@ describe('Upload basic site and details', function () {
         assert.equal(res.statusCode, 200);
         let message = JSON.parse(res.body).message;
         assert.equal(message, `Added 0 new sites and 1 new site details`);
+        
     });
 });
