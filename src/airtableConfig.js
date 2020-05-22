@@ -15,4 +15,4 @@ const detailsTable = base(process.env.NODE_ENV === 'test' ? 'TEST_SITE_DETAILS' 
 
 const fromEmail = process.env.FROM_EMAIL;
 
-module.exports = { sitesTable, detailsTable, fromEmail };
+module.exports = { sitesTable: sitesTable, detailsTable: detailsTable, fromEmail: fromEmail };

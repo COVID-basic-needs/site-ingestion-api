@@ -9,9 +9,13 @@
   "dependencies": {
     "airtable": "^0.8.1",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "jsonschema": "^1.2.6"
   },
   "scripts": {
     "test": "mocha"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.2"
   }
 }

@@ -2,28 +2,37 @@
  * Pushes data to Airtable SITES table, then push associated details to SITE_DETAILS
  */
 
-let { detailsTable, fromEmail, sitesTable } = require("./airtableConfig");
-
-const updateMethod = "Upload V2: github.com/COVID-basic-needs/food-site-updates";
+const { detailsTable, sitesTable } = require("./airtableConfig");
+const { populateSiteFields, populateDetailsFields } = require("./schema");
 
 module.exports = async function(siteList){
     const total = siteList.length;
 
-    const originalSites = await fetchSiteTable();
+    try {
+        originalSites = await fetchSiteTable();
+    } catch (err) {
+        // error fetching site table
+        console.log(err);
+        throw err;
+    }
     // filter out the site details corresponding to existing sites to be uploaded separately
     const dupedSiteDetails = [];
     const newSites = [];
 
+    // filter out duplicates from list
     siteList.map(site => { 
         const siteID = getSiteID(site);
         if (originalSites.has(siteID)) {
             // on duplicate, add site details (with row id) to separate list
-            const details = populateDetailsFields(site, originalSites.get(siteID), fromEmail, updateMethod);
+            const details = populateDetailsFields(site, originalSites.get(siteID));
             dupedSiteDetails.push(details);
         } else {
             newSites.push(site);
         }
     }); 
+
+    // promises to await on
+    let promises = [];
 
     // Airtable's create API only allows 10 at a time, so we batch.
     // (there is a rate limit, but their SDK has builtin retry logic so we should be safe)
@@ -31,36 +40,59 @@ module.exports = async function(siteList){
         const tenSites = newSites.slice(i, i + 10 < total ? i + 10 : total);
         
         // create a list of 10 site objects to be pushed to the table
-        const tenSiteLocations = tenSites.map(site => populateSiteFields(site, fromEmail, updateMethod));
+        const tenSiteLocations = tenSites.map(site => populateSiteFields(site));
+        
+        let p = new Promise(function (resolve, reject) {
+            sitesTable.create(tenSiteLocations, { typecast: true }, async (err, records) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                }
+                
+                // create a list of the 10 site details objects
+                const tenSiteDetails = [];
+                for (let i = 0; i < records.length; i++) {
+                    // create details field with corresponding site object and row id
+                    tenSiteDetails.push(populateDetailsFields(tenSites[i], records[i].getId()));
+                };
 
-        sitesTable.create(tenSiteLocations, { typecast: true }, async (err, records) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            
-            // create a list of the 10 site details objects
-            const tenSiteDetails = [];
-            for (let i = 0; i < records.length; i++) {
-                // create details field with corresponding site object and row id
-                tenSiteDetails.push(populateDetailsFields(tenSites[i], records[i].getId(), fromEmail, updateMethod));
-            };
-            
-            // push details objects to Airtable
-            detailsTable.create(tenSiteDetails, { typecast: true }).catch(err => console.error(err));
+                // push details objects to Airtable
+                detailsTable.create(tenSiteDetails, { typecast: true }, async (err, records) => {
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                    }
+                    resolve();
+                });
+            });
         });
+        
+        promises.push(p);
     };
 
     // push details corresponded to duped sites
     for (let j = 0; j < dupedSiteDetails.length; j++){
         const tenDupedSiteDetails = dupedSiteDetails.slice(j, j + 10 < total ? j + 10 : total);
-        detailsTable.create(tenDupedSiteDetails, { typecast: true }).catch(err => console.error(err));
+        
+        let p = new Promise(function (resolve, reject) {
+            detailsTable.create(tenDupedSiteDetails, { typecast: true }, async (err, records) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                }
+                resolve();
+            });
+        });
+        promises.push(p);
     }
 
+    // wait on all promises to finish
+    await Promise.all(promises);
     console.log(`Pushed ${newSites.length} rows to Airtable ${sitesTable.name} table and ${dupedSiteDetails.length + newSites.length} rows to the ${detailsTable.name} table.`);
+    return [newSites.length, dupedSiteDetails.length + newSites.length];
 };
 
-// fetches the siteIDs from the sites table with pagination
+// fetches the siteIDs from the sites table with pagination, returning a map of siteIDs => Airtable IDs
 function fetchSiteTable() {
     // map of siteID to ID
     const sites = new Map();
@@ -93,73 +125,4 @@ function fetchSiteTable() {
 function getSiteID(site) {
     const joined = `${site.siteName} - ${site.siteStreetAddress}, ${site.siteCity} ${site.siteState} ${site.siteZip + ""}`;
     return joined.replace('\n', ' ');
-}
-
-function populateSiteFields(site, fromEmail, updateMethod) {
-    return {
-        fields: {
-            uploadedBy: { email: fromEmail },
-            siteName: site.siteName,
-            EFROID: site.EFROID,
-            siteStreetAddress: site.siteStreetAddress,
-            siteCity: site.siteCity,
-            siteState: site.siteState,
-            siteZip: site.siteZip ? site.siteZip + "" : null,
-            siteCountry: site.siteCountry,
-            siteCounty: site.siteCounty,
-            siteNeighborhood: site.siteNeighborhood,
-            siteType: site.siteType,
-            siteSubType: site.siteSubType,
-            lat: site.lat,
-            lng: site.lng,
-            createdMethod: updateMethod
-        }
-    };
-}
-
-function populateDetailsFields(site, id, fromEmail, updateMethod) {
-    return {
-        fields: {
-            Site: [id],
-            uploadedBy: { email: fromEmail },
-            status: site.status,
-            contactName: site.contactName,
-            contactPhone: site.contactPhone ? site.contactPhone + "" : null,
-            contactEmail: site.contactEmail,
-            publicOpenness: site.publicOpenness,
-            deliveryEligibility: site.deliveryEligibility,
-            eligibilityRequirements: site.eligibilityRequirements,
-            hoursEligibility1: site.hoursEligibility1,
-            hours1: site.hours1,
-            hoursEligibility2: site.hoursEligibility2,
-            hours2: site.hours2,
-            hoursEligibility3: site.hoursEligibility3,
-            hours3: site.hours3,
-            validUntil: site.validUntil,
-            acceptsFoodDonations: site.acceptsFoodDonations,
-            hasEnoughFood: site.hasEnoughFood,
-            canReceiveBulk: site.canReceiveBulk,
-            foodNeeds: site.foodNeeds,
-            hasBabyFormula: site.hasBabyFormula,
-            staffVolunteerNeeds: site.staffVolunteerNeeds,
-            recruitingAssistance: site.recruitingAssistance,
-            otherNeeds: site.otherNeeds,
-            publicContactMethod: site.publicContactMethod,
-            publicPhone: site.publicPhone ? site.publicPhone + "" : null,
-            publicEmail: site.publicEmail,
-            website: site.website,
-            socialMedia: site.socialMedia,
-            covidChanges: site.covidChanges,
-            increasedDemandCauses: site.increasedDemandCauses,
-            totalFoodCommunityNeeds: site.totalFoodCommunityNeeds,
-            currentCapacity: site.currentCapacity,
-            staffVolunteerReduction: site.staffVolunteerReduction,
-            safetyPrecautions: site.safetyPrecautions,
-            languages: site.languages,
-            nearbyFoodPrograms: site.nearbyFoodPrograms,
-            notesGovRequests: site.notesGovRequests,
-            notesAnythingElse: site.notesAnythingElse ? site.notesAnythingElse + "" : null,
-            createdMethod: updateMethod
-        }
-    };
 }
