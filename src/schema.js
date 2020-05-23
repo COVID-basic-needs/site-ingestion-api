@@ -3,9 +3,7 @@
  */
 let { fromEmail } = require("./airtableConfig");
 
-// TODO: Update field in Airtable and add me!
-// const updateMethod = "Upload V3: https://github.com/COVID-basic-needs/site-ingestion-api";
-const updateMethod = null;
+const updateMethod = "Upload V3: https://github.com/COVID-basic-needs/site-ingestion-api";
 
 module.exports.dataSchema = {
     "id": "/dataSchema",

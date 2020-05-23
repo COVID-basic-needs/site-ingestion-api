@@ -5,11 +5,17 @@ This is a very basic site ingestion API hosted on AWS Lambda. It implements the 
 This endpoint deduplicates based on site ID, which is defined as: 
 
     const joined = `${site.siteName} - ${site.siteStreetAddress}, ${site.siteCity} ${site.siteState} ${site.siteZip + ""}`;
-    
+
 ## Install
 
     git clone https://github.com/COVID-basic-needs/site-ingestion-api.git
     npm ci
+
+## Configure environment variables
+
+    mv example.env .env
+
+Fill out `.env` with your email and Airtable API key.
 
 ## Run the tests
 
