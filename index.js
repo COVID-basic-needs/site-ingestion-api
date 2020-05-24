@@ -6,7 +6,16 @@ console.log('Loading site ingestion API');
 
 exports.handler = async (event) => {
     console.log("Request: " + JSON.stringify(event));
-    
+
+    if (event.path !== "/form-upload" && event.path !== "/upload-site") {
+        return {
+            statusCode: 404,
+            body: JSON.stringify({
+                error: "Unsupported endpoint",
+            }),
+        };
+    }
+
     if (!event.body || Object.keys(event.body).length === 0) {
         return {
             statusCode: 400,
@@ -19,16 +28,21 @@ exports.handler = async (event) => {
     let sites;
     try {
         let body = JSON.parse(event.body);
-        if (!body.data || !Array.isArray(body.data) || body.data.length == 0) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({
-                    error: "No data array provided",
-                }),
-            };
-        }
 
-        sites = body.data;
+        // add workaround for FormAssembly data
+        if (event.path === "/form-upload") {
+            sites = [body];
+        } else if (event.path === "/upload-site") {
+            if (!body.data || !Array.isArray(body.data) || body.data.length == 0) {
+                return {
+                    statusCode: 400,
+                    body: JSON.stringify({
+                        error: "No data array provided",
+                    }),
+                };
+            }
+            sites = body.data;
+        } 
     } catch (e) {
         console.log("Invalid payload: " + event.body);
         
