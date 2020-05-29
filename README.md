@@ -64,3 +64,63 @@ The endpoint can be accessed at: https://i3tmnkgp2i.execute-api.us-west-2.amazon
     {"message":"Added 1 new sites and 1 new site details"}
 
 For sites with the same site ID, only a site detail entry will be made. If you run the above cURL command, you will most likely see 0 new sites added.
+
+
+## Schema
+
+This endpoint expects an array of objects named `data` in the POST body. See `schema.js` for more information on the expected format of the data.
+
+    {
+        "siteName": { "type": "string" }, // REQUIRED
+        "siteStreetAddress": { "type": "string" }, // REQUIRED
+        "siteCity": { "type": "string" }, // REQUIRED
+        "siteState": { "type": "string" }, // REQUIRED
+        "siteZip": { "type": "integer" }, // REQUIRED
+        "siteCountry": { "type": "string" }, // REQUIRED
+        "siteCounty": { "type": "string" },
+        "siteNeighborhood": { "type": "string" },
+        "siteType": { "type": "string" },
+        "siteSubType": { "type": "string" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "EFROID": { "type": "string" },
+        "publicContactMethod": { "type": "string" },
+        "publicPhone": { "type": "string" },
+        "publicEmail": { "type": "string" },
+        "website": { "type": "string" },
+        "socialMedia": { "type": "string" },
+        "contactName": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "status": { "type": "string" },
+        "publicOpenness": { "type": "string" },
+        "deliveryEligibility": { "type": "string" },
+        "eligibilityRequirements": { "type": "string" },
+        "hoursEligibility1": { "type": "string" },
+        "hours1": { "type": "string" },
+        "hoursEligibility2": { "type": "string" },
+        "hours2": { "type": "string" },
+        "hoursEligibility3": { "type": "string" },
+        "hours3": { "type": "string" },
+        "validUntil": { "type": "string" },
+        "acceptsFoodDonations": { "type": "string" },
+        "hasEnoughFood": { "type": "string" },
+        "canReceiveBulk": { "type": "string" },
+        "foodNeeds": { "type": "string" },
+        "hasBabyFormula": { "type": "string" },
+        "staffVolunteerNeeds": { "type": "string" },
+        "recruitingAssistance": { "type": "string" },
+        "otherNeeds": { "type": "string" },
+        "covidChanges": { "type": "string" },
+        "increasedDemandCauses": { "type": "string" },
+        "totalFoodCommunityNeeds": { "type": "string" },
+        "currentCapacity": { "type": "string" },
+        "staffVolunteerReduction": { "type": "string" },
+        "safetyPrecautions": { "type": "string" },
+        "languages": { "type": "string" },
+        "nearbyFoodPrograms": { "type": "string" },
+        "notesGovRequests": { "type": "string" },
+        "notesAnythingElse": { "type": "string" },
+        "stockStatus": { "type": "string" },
+        "reminderMethod": { "type": "string" },
+    }

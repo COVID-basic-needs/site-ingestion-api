@@ -58,7 +58,9 @@ module.exports.dataSchema = {
         "languages": { "type": "string" },
         "nearbyFoodPrograms": { "type": "string" },
         "notesGovRequests": { "type": "string" },
-        "notesAnythingElse": { "type": "string" }
+        "notesAnythingElse": { "type": "string" },
+        "stockStatus": { "type": "string" },
+        "reminderMethod": { "type": "string" },
     },
     "required": ["siteName", "siteStreetAddress", "siteCity", "siteCountry", "siteState", "siteZip"],
     "throwError": false
