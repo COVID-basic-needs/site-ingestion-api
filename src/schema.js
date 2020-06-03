@@ -13,7 +13,7 @@ module.exports.dataSchema = {
         "siteStreetAddress": { "type": "string" },
         "siteCity": { "type": "string" },
         "siteState": { "type": "string" },
-        "siteZip": { "type": "integer" },
+        "siteZip": { "type": "string" },
         "siteCountry": { "type": "string" },
         "siteCounty": { "type": "string" },
         "siteNeighborhood": { "type": "string" },
