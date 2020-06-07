@@ -1,6 +1,6 @@
 'use strict';
 const pushToAirtable = require('./src/pushToAirtable'); 
-const validate = require('./src/validator');
+const validate = require('./site-ingestion-schema/validator');
 
 console.log('Loading site ingestion API');
 

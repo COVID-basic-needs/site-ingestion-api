@@ -10,7 +10,7 @@ const testSite = {
     siteCity: "TestVille",
     siteCountry: "USA",
     siteState: "TS",
-    siteZip: 12345,
+    siteZip: "12345",
     contactName: "Test Detail 1/2"
 }
 
