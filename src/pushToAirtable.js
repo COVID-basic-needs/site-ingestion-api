@@ -2,8 +2,10 @@
  * Pushes data to Airtable SITES table, then push associated details to SITE_DETAILS
  */
 
-const { detailsTable, sitesTable } = require("./airtableConfig");
-const { populateSiteFields, populateDetailsFields } = require("./schema");
+const { detailsTable, sitesTable, fromEmail } = require("./airtableConfig");
+const { populateSiteFields, populateDetailsFields } = require("../site-ingestion-schema/schema");
+
+const updateMethod = "Upload V3: https://github.com/COVID-basic-needs/site-ingestion-api";
 
 module.exports = async function(siteList){
     const total = siteList.length;
@@ -25,7 +27,8 @@ module.exports = async function(siteList){
         const siteID = getSiteID(site);
         if (originalSites.has(siteID)) {
             // on duplicate, add site details (with row id) to separate list
-            const details = populateDetailsFields(site, originalSites.get(siteID));
+            console.log("FROM EMAIL: " + fromEmail);
+            const details = populateDetailsFields(site, originalSites.get(siteID), fromEmail, updateMethod);
             dupedSiteDetails.push(details);
         } else {
             newSites.push(site);
@@ -41,7 +44,7 @@ module.exports = async function(siteList){
         const tenSites = newSites.slice(i, i + 10 < total ? i + 10 : total);
         
         // create a list of 10 site objects to be pushed to the table
-        const tenSiteLocations = tenSites.map(site => populateSiteFields(site));
+        const tenSiteLocations = tenSites.map(site => populateSiteFields(site, fromEmail, updateMethod));
         
         let p = new Promise(function (resolve, reject) {
             sitesTable.create(tenSiteLocations, { typecast: true }, async (err, records) => {
@@ -54,7 +57,7 @@ module.exports = async function(siteList){
                 const tenSiteDetails = [];
                 for (let i = 0; i < records.length; i++) {
                     // create details field with corresponding site object and row id
-                    tenSiteDetails.push(populateDetailsFields(tenSites[i], records[i].getId()));
+                    tenSiteDetails.push(populateDetailsFields(tenSites[i], records[i].getId(), fromEmail, updateMethod));
                 };
 
                 // push details objects to Airtable
