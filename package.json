@@ -1,23 +1,23 @@
 {
-  "name": "site-ingestion-api",
-  "version": "1.0.0",
-  "description": "Data ingestion API layer that handles the site data ingestion flow.",
-  "main": "index.js",
-  "repository": "https://github.com/COVID-basic-needs/site-ingestion-api",
-  "author": "Michael Man",
-  "license": "MIT",
-  "dependencies": {
-    "airtable": "^0.8.1",
-    "and": "0.0.3",
-    "build": "^0.1.4",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "jsonschema": "^1.2.6"
-  },
-  "scripts": {
-    "test": "mocha --timeout 10000"
-  },
-  "devDependencies": {
-    "mocha": "^7.1.2"
-  }
+    "name": "site-ingestion-api",
+    "version": "1.0.0",
+    "description": "Data ingestion API layer that handles the site data ingestion flow.",
+    "main": "index.js",
+    "repository": "https://github.com/COVID-basic-needs/site-ingestion-api",
+    "author": "Michael Man",
+    "license": "MIT",
+    "dependencies": {
+        "airtable": "^0.8.1",
+        "and": "0.0.3",
+        "build": "^0.1.4",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "jsonschema": "^1.2.6"
+    },
+    "scripts": {
+        "test": "mocha --timeout 10000"
+    },
+    "devDependencies": {
+        "mocha": "^7.1.2"
+    }
 }
