@@ -51,7 +51,6 @@ describe('POST body checks', function () {
         assert.equal(res.statusCode, 400);
     });
 
-
     it('Should return 400 for if data does not conform to schema', async function () {
         let req = {
             path: "/upload-site",
@@ -77,13 +76,13 @@ describe('Upload basic site and details to /upload-site', function () {
         }
         let res = await apiHandler(req);
 
-        assert.equal(res.statusCode, 200);
+        assert.equal(res.statusCode, 200, res.body);
         let message = JSON.parse(res.body).message;
         assert.equal(message, `Added 1 new sites and 1 new site details`);
     });
 
     it('Should recognize duplicate and only upload 1 site detail', async function () {
-        testSite2 = testSite;
+        testSite2 = JSON.parse(JSON.stringify(testSite));
         testSite2.contactName = "Test Detail 2/2";
 
         let req = {
@@ -94,7 +93,7 @@ describe('Upload basic site and details to /upload-site', function () {
         }
         let res = await apiHandler(req);
 
-        assert.equal(res.statusCode, 200);
+        assert.equal(res.statusCode, 200, res.body);
         let message = JSON.parse(res.body).message;
         assert.equal(message, `Added 0 new sites and 1 new site details`);
 
@@ -103,7 +102,7 @@ describe('Upload basic site and details to /upload-site', function () {
 
 describe('Upload basic site and details to /form-upload', function () {
     it('Should recognize duplicate and only upload 1 site detail', async function () {
-        testSiteFromForm = testSite;
+        testSiteFromForm = JSON.parse(JSON.stringify(testSite));
         testSiteFromForm.siteName = "testSiteFromForm" + timestamp;
         testSiteFromForm.contactName = "Test Detail 1/1";
 
@@ -113,7 +112,7 @@ describe('Upload basic site and details to /form-upload', function () {
         }
         let res = await apiHandler(req);
 
-        assert.equal(res.statusCode, 200);
+        assert.equal(res.statusCode, 200, res.body);
         let message = JSON.parse(res.body).message;
         assert.equal(message, `Added 1 new sites and 1 new site details`);
     });
