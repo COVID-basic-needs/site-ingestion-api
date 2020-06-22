@@ -102,20 +102,38 @@ describe('Upload basic site and details to /upload-site', () => {
     });
 });
 
-describe('Check data cleaning', function () {
-  it('Should replace newlines and trailing newlines', function () {
-    const multilineStr = "Hello \n Regex \n World \n";
-    const site = { siteName: multilineStr };
-    const res = cleanData(site);
+describe('Check data cleaning', () => {
+    it('Should replace newlines and trailing newlines', () => {
+        const multilineStr = 'Hello \n Regex \n World \n';
+        const site = { siteName: multilineStr };
+        const res = cleanData(site);
 
-    assert.equal(site.siteName, "Hello, Regex, World");
-  });
+        assert.equal(site.siteName, 'Hello, Regex, World');
+    });
 
-  it('Should replace whitespace', function () {
-    const multilineStr = "\t\t\nHello ,  Regex \n World";
-    const site = { siteName: multilineStr };
-    const res = cleanData(site);
+    it('Should replace whitespace', () => {
+        const multilineStr = '\t\t\nHello ,  Regex \n World';
+        const site = { siteName: multilineStr };
+        const res = cleanData(site);
 
-    assert.equal(site.siteName, "Hello, Regex, World");
-  });
+        assert.equal(site.siteName, 'Hello, Regex, World');
+    });
 });
+
+// describe('Upload basic site and details to /form-upload', function () {
+//   it('Should recognize duplicate and only upload 1 site detail', async function () {
+//     testSiteFromForm = JSON.parse(JSON.stringify(testSite));
+//     testSiteFromForm.siteName = 'testSiteFromForm' + timestamp;
+//     testSiteFromForm.contactName = 'Test Detail 1/1';
+
+//     const req = {
+//       path: '/form-upload',
+//       body: JSON.stringify({ data: testSiteFromForm, email: testEmail })
+//     };
+//     const res = await apiHandler(req);
+
+//     assert.equal(res.statusCode, 200, res.body);
+//     const message = JSON.parse(res.body).message;
+//     assert.equal(message, 'Added 1 new sites and 1 new site details');
+//   });
+// });
