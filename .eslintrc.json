@@ -1,0 +1,64 @@
+{
+    "env": {
+        "commonjs": true,
+        "es2020": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 11
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "quote-props": [
+            "error",
+            "as-needed"
+        ],
+        "array-callback-return": "error",
+        "strict": "error",
+        "require-await": "error",
+        "no-var": "error",
+        "vars-on-top": "error",
+        "prefer-const": "error",
+        "prefer-arrow-callback": "error",
+        "sort-imports": "error",
+        "no-useless-rename": "error",
+        "no-duplicate-imports": "error",
+        "arrow-spacing": "error",
+        "eol-last": "error",
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "no-use-before-define": "error",
+        "no-undefined": "error",
+        "no-useless-return": "error",
+        "no-useless-concat": "error",
+        "no-unmodified-loop-condition": "error",
+        "no-empty-function": "error",
+        "eqeqeq": [
+            "error",
+            "smart"
+        ],
+        "dot-notation": "error",
+        "block-scoped-var": "error"
+    }
+}
